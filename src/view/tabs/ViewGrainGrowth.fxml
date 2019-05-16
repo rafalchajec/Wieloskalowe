@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="pane" prefHeight="610.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.tabs.ControllerGrainGrowth">
+    <children>
+      <ScrollPane fx:id="scrollPane" hmax="400.0" layoutX="14.0" layoutY="18.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="600.0" vmax="400.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <content>
+          <AnchorPane minHeight="1000.0" minWidth="1000.0" prefHeight="1000.0" prefWidth="1000.0">
+               <children>
+                    <Canvas id="canvas1D" fx:id="canvas2D" height="1000.0" layoutX="-6.0" onMouseClicked="#addGrainOnCanvas" width="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+        <Button fx:id="startButton" layoutX="620.0" layoutY="511.0" mnemonicParsing="false" onAction="#start" prefHeight="25.0" prefWidth="170.0" text="START" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="425.0" />
+      <Button fx:id="stopButton" layoutX="620.0" layoutY="581.0" mnemonicParsing="false" onAction="#stop" prefHeight="25.0" prefWidth="170.0" text="STOP" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="485.0" />
+      <Button fx:id="pauseButton" layoutX="620.0" layoutY="546.0" mnemonicParsing="false" onAction="#pause" prefHeight="25.0" prefWidth="170.0" text="PAUSE / RESUME" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="455.0" />
+      <TextField fx:id="numberOfCellsField" layoutX="620.0" layoutY="310.0" prefHeight="25.0" prefWidth="170.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="247.0" />
+      <Label layoutX="621.0" layoutY="287.0" text="Number of grains" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="230.0" />
+      <Label layoutX="621.0" layoutY="465.0" text="Speed in milliseconds" AnchorPane.rightAnchor="64.0" AnchorPane.topAnchor="385.0" />
+      <Label layoutX="619.0" layoutY="70.0" text="Neighborhood type" AnchorPane.rightAnchor="75.0" AnchorPane.topAnchor="50.0" />
+      <ChoiceBox fx:id="choiceBoxNeighborhoodType" layoutX="679.0" layoutY="98.0" prefHeight="25.0" prefWidth="170.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="67.0" />
+      <Label layoutX="679.0" layoutY="14.0" text="Edge type" AnchorPane.rightAnchor="127.0" AnchorPane.topAnchor="5.0" />
+      <ChoiceBox fx:id="choiceBoxEdgeType" layoutX="685.0" layoutY="37.0" prefHeight="25.0" prefWidth="170.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="22.0" />
+      <Slider fx:id="sliderGridHeight" blockIncrement="1.0" layoutX="623.0" layoutY="151.0" onKeyPressed="#gridHeightPressed" onMouseClicked="#setGridHeight" onMouseDragged="#setGridHeight" onMouseReleased="#heightDone" prefHeight="14.0" prefWidth="140.0" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="112.0" />
+      <Slider fx:id="sliderGridWidth" blockIncrement="1.0" layoutX="623.0" layoutY="191.0" onKeyPressed="#gridWidthPressed" onMouseClicked="#setGridWidth" onMouseDragged="#setGridWidth" onMouseReleased="#widthDone" prefHeight="14.0" prefWidth="140.0" AnchorPane.rightAnchor="37.0" AnchorPane.topAnchor="147.0" />
+      <Label fx:id="labelGridHeight" layoutX="783.0" layoutY="150.0" text="1" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="112.0" />
+      <Label fx:id="labelGridWidth" layoutX="783.0" layoutY="189.0" text="1" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="147.0" />
+      <Label layoutX="623.0" layoutY="126.0" text="Grain Height" AnchorPane.rightAnchor="112.0" AnchorPane.topAnchor="95.0" />
+      <Label layoutX="627.0" layoutY="174.0" text="Grain Width" AnchorPane.rightAnchor="116.0" AnchorPane.topAnchor="130.0" />
+      <Slider fx:id="sliderAnimationSpeed" blockIncrement="1.0" layoutX="621.0" layoutY="485.0" max="1000.0" min="10.0" onKeyPressed="#animationSpeedPressed" onMouseClicked="#setAnimationSpeed" onMouseDragged="#setAnimationSpeed" value="10.0" AnchorPane.rightAnchor="39.0" AnchorPane.topAnchor="402.0" />
+      <Label fx:id="labelAnimationSpeed" layoutX="777.0" layoutY="482.0" text="10" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="402.0" />
+      <Button fx:id="fillButton" layoutX="620.0" layoutY="400.0" mnemonicParsing="false" onAction="#fillCanvas" prefHeight="25.0" prefWidth="170.0" text="Fill" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="325.0" />
+      <Button fx:id="resetButton" layoutX="620.0" layoutY="430.0" mnemonicParsing="false" onAction="#reset" prefHeight="25.0" prefWidth="170.0" text="Reset" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="355.0" />
+      <Label fx:id="labelGridSize" layoutX="623.0" layoutY="207.0" prefHeight="17.0" prefWidth="170.0" text="Grid size: 1000x1000" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="165.0" />
+      <ChoiceBox fx:id="choiceTypeOfPlacement" layoutX="620.0" layoutY="262.0" prefHeight="25.0" prefWidth="170.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="202.0" />
+      <TextField fx:id="radiusField" layoutX="620.0" layoutY="365.0" prefHeight="25.0" prefWidth="170.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="292.0" />
+      <Label layoutX="619.0" layoutY="238.0" text="Type of placement" AnchorPane.rightAnchor="81.0" AnchorPane.topAnchor="185.0" />
+      <Label layoutX="620.0" layoutY="337.0" text="Distance/Radius" AnchorPane.rightAnchor="94.0" AnchorPane.topAnchor="275.0" />
+
+    </children>
+</AnchorPane>

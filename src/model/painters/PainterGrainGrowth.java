@@ -11,8 +11,7 @@ import model.cells.CellGrain;
 
 import java.util.concurrent.TimeUnit;
 
-import static model.ModelGrainGrowth.TypeOfPlacement.*;
-
+import static model.ModelGrainGrowth.TypeOfPlacement.MonteCarlo;
 import static model.cells.CellGrain.State;
 
 public class PainterGrainGrowth implements Runnable {
@@ -50,10 +49,10 @@ public class PainterGrainGrowth implements Runnable {
             Platform.runLater(() -> {
                 CellGrain[][] tab = model.getResult(model.getGrid());
 
-                if (getNumberOfEmptyGrains(tab) == 0 ) {
+                if (getNumberOfEmptyGrains(tab) == 0 && Global.placementType != MonteCarlo) {
                     stop();
                     cgg.resetButtons();
-                    //model.setGridEnergy(model.getGrid());
+                    model.setGridEnergy(model.getGrid());
                 }
                 cleanCanvas();
 

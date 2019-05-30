@@ -28,8 +28,8 @@
         <RadioButton fx:id="radio500" layoutX="680.0" layoutY="394.0" mnemonicParsing="false" text="500" AnchorPane.rightAnchor="79.0" AnchorPane.topAnchor="394.0" />
         <RadioButton fx:id="radio1000" layoutX="680.0" layoutY="414.0" mnemonicParsing="false" text="1000" AnchorPane.rightAnchor="73.0" AnchorPane.topAnchor="414.0" />
         <Button fx:id="resetButton" layoutX="680.0" layoutY="545.0" mnemonicParsing="false" onAction="#reset" prefHeight="25.0" prefWidth="110.0" text="RESET" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="545.0" />
-      <Button fx:id="gliderButton" layoutX="702.0" layoutY="67.0" mnemonicParsing="false" onAction="#gliderButton" prefHeight="25.0" prefWidth="66.0" text="Glider" />
-      <Button fx:id="staleButton" layoutX="702.0" layoutY="104.0" mnemonicParsing="false" onAction="#staleButton" prefHeight="25.0" prefWidth="66.0" text="Stałe" />
-      <Button fx:id="oscylatorButton" layoutX="703.0" layoutY="142.0" mnemonicParsing="false" onAction="#oscylatorButton" text="Oscylator" />
+        <Button fx:id="gliderButton" layoutX="702.0" layoutY="67.0" mnemonicParsing="false" onAction="#gliderButton" prefHeight="25.0" prefWidth="66.0" text="Glider" />
+        <Button fx:id="staleButton" layoutX="702.0" layoutY="104.0" mnemonicParsing="false" onAction="#staleButton" prefHeight="25.0" prefWidth="66.0" text="Stałe" />
+        <Button fx:id="oscylatorButton" layoutX="703.0" layoutY="142.0" mnemonicParsing="false" onAction="#oscylatorButton" text="Oscylator" />
     </children>
 </AnchorPane>

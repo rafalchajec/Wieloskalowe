@@ -178,22 +178,22 @@ public class ControllerGameOfLife implements Initializable {
     public void gliderButton(ActionEvent actionEvent) {
 
         try {
-                model = new ModelGameOfLife(gridHeight, gridWidth);
-                model.clearGrid();
-                model.fillGlider();
+            model = new ModelGameOfLife(gridHeight, gridWidth);
+            model.clearGrid();
+            model.fillGlider();
 
-                int height = (int) canvas2D.getHeight() / model.getGridHeight();
-                int width = (int) canvas2D.getWidth() / model.getGridWidth();
-                Platform.runLater(() -> {
-                    Cell[][] tab = model.getGrid();
-                    cleanCanvas();
-                    gc.setFill(Color.BLACK);
-                    for (int i = 0; i < model.getGridHeight(); i++) {
-                        for (int j = 0; j < model.getGridWidth(); j++)
-                            if (tab[i][j].getState() == CellGameOfLife.State.ALIVE)
-                                gc.fillRect(j * width, i * height, height, width);
-                    }
-                });
+            int height = (int) canvas2D.getHeight() / model.getGridHeight();
+            int width = (int) canvas2D.getWidth() / model.getGridWidth();
+            Platform.runLater(() -> {
+                Cell[][] tab = model.getGrid();
+                cleanCanvas();
+                gc.setFill(Color.BLACK);
+                for (int i = 0; i < model.getGridHeight(); i++) {
+                    for (int j = 0; j < model.getGridWidth(); j++)
+                        if (tab[i][j].getState() == CellGameOfLife.State.ALIVE)
+                            gc.fillRect(j * width, i * height, height, width);
+                }
+            });
 
         }
         catch (Exception ignored){}
@@ -201,22 +201,22 @@ public class ControllerGameOfLife implements Initializable {
     public void staleButton(ActionEvent actionEvent) {
 
         try {
-                model = new ModelGameOfLife(gridHeight, gridWidth);
-                model.clearGrid();
-                model.fillStale();
+            model = new ModelGameOfLife(gridHeight, gridWidth);
+            model.clearGrid();
+            model.fillStale();
 
-                int height = (int) canvas2D.getHeight() / model.getGridHeight();
-                int width = (int) canvas2D.getWidth() / model.getGridWidth();
-                Platform.runLater(() -> {
-                    Cell[][] tab = model.getGrid();
-                    cleanCanvas();
-                    gc.setFill(Color.BLACK);
-                    for (int i = 0; i < model.getGridHeight(); i++) {
-                        for (int j = 0; j < model.getGridWidth(); j++)
-                            if (tab[i][j].getState() == CellGameOfLife.State.ALIVE)
-                                gc.fillRect(j * width, i * height, height, width);
-                    }
-                });
+            int height = (int) canvas2D.getHeight() / model.getGridHeight();
+            int width = (int) canvas2D.getWidth() / model.getGridWidth();
+            Platform.runLater(() -> {
+                Cell[][] tab = model.getGrid();
+                cleanCanvas();
+                gc.setFill(Color.BLACK);
+                for (int i = 0; i < model.getGridHeight(); i++) {
+                    for (int j = 0; j < model.getGridWidth(); j++)
+                        if (tab[i][j].getState() == CellGameOfLife.State.ALIVE)
+                            gc.fillRect(j * width, i * height, height, width);
+                }
+            });
 
         }
         catch (Exception ignored){}
@@ -224,22 +224,22 @@ public class ControllerGameOfLife implements Initializable {
     public void oscylatorButton(ActionEvent actionEvent) {
 
         try {
-                model = new ModelGameOfLife(gridHeight, gridWidth);
-                model.clearGrid();
-                model.fillOscylator();
+            model = new ModelGameOfLife(gridHeight, gridWidth);
+            model.clearGrid();
+            model.fillOscylator();
 
-                int height = (int) canvas2D.getHeight() / model.getGridHeight();
-                int width = (int) canvas2D.getWidth() / model.getGridWidth();
-                Platform.runLater(() -> {
-                    Cell[][] tab = model.getGrid();
-                    cleanCanvas();
-                    gc.setFill(Color.BLACK);
-                    for (int i = 0; i < model.getGridHeight(); i++) {
-                        for (int j = 0; j < model.getGridWidth(); j++)
-                            if (tab[i][j].getState() == CellGameOfLife.State.ALIVE)
-                                gc.fillRect(j * width, i * height, height, width);
-                    }
-                });
+            int height = (int) canvas2D.getHeight() / model.getGridHeight();
+            int width = (int) canvas2D.getWidth() / model.getGridWidth();
+            Platform.runLater(() -> {
+                Cell[][] tab = model.getGrid();
+                cleanCanvas();
+                gc.setFill(Color.BLACK);
+                for (int i = 0; i < model.getGridHeight(); i++) {
+                    for (int j = 0; j < model.getGridWidth(); j++)
+                        if (tab[i][j].getState() == CellGameOfLife.State.ALIVE)
+                            gc.fillRect(j * width, i * height, height, width);
+                }
+            });
         }
         catch (Exception ignored){}
     }

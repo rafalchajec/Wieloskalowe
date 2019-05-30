@@ -1,5 +1,5 @@
 package model.cells;
-import static model.cells.CellGrain.Availability.AVAILABLE;
+import static model.cells.CellGrain.Availability.*;
 
 public class CellGrain extends Cell {
     public static class State {

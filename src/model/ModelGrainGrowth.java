@@ -1,16 +1,15 @@
 package model;
 
+import java.util.*;
+
 import javafx.scene.paint.Color;
 import model.cells.CellGrain;
 
-import java.util.*;
-
-import static model.ModelGrainGrowth.EdgeType.Closed;
 import static model.ModelGrainGrowth.NeighborhoodType.*;
-import static model.cells.CellGrain.Availability.AVAILABLE;
-import static model.cells.CellGrain.Availability.UNAVAILABLE;
-import static model.cells.CellGrain.State.EMPTY;
-import static model.cells.CellGrain.State.GRAIN;
+import static model.ModelGrainGrowth.EdgeType.*;
+import static model.cells.CellGrain.State.*;
+import static model.cells.CellGrain.Availability.*;
+import static model.ModelGrainGrowth.TypeOfPlacement.*;
 
 public class ModelGrainGrowth {
     private CellGrain[][] grid;
@@ -27,12 +26,11 @@ public class ModelGrainGrowth {
     }
 
     public enum NeighborhoodType {
-        vonNeuman
+        vonNeuman, Moore, leftPentagonal, rightPentagonal, upPentagonal, downPentagonal, randomPentagonal, leftHexagonal, rightHexagonal, randomHexagonal
     }
 
-
     public enum TypeOfPlacement {
-        Random, EvenlyPlacement, RandomWithRadius
+        Random, EvenlyPlacement, RandomWithRadius, MonteCarlo
     }
 
     public class GrainType {
@@ -147,6 +145,179 @@ public class ModelGrainGrowth {
         return getIDMaxNeighbour(grainMap);
     }
 
+    private int moore(CellGrain[][] frame, int iG, int i, int iD, int jL, int j, int jR) {
+        Map<Integer, Integer> grainMap = new HashMap<>();
+        int grainType;
+
+        if (iG != -1 && jL != -1)
+            if (frame[iG][jL].getState() == GRAIN) {
+                grainType = frame[iG][jL].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if (iG != -1)
+            if (frame[iG][j].getState() == GRAIN) {
+                grainType = frame[iG][j].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if (iG != -1 && jR != -1)
+            if (frame[iG][jR].getState() == GRAIN) {
+                grainType = frame[iG][jR].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if (jL != -1)
+            if (frame[i][jL].getState() == GRAIN) {
+                grainType = frame[i][jL].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if (jR != -1)
+            if (frame[i][jR].getState() == GRAIN) {
+                grainType = frame[i][jR].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if (iD != -1 && jL != -1)
+            if (frame[iD][jL].getState() == GRAIN) {
+                grainType = frame[iD][jL].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if (iD != -1)
+            if (frame[iD][j].getState() == GRAIN) {
+                grainType = frame[iD][j].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if (iD != -1 && jR != -1)
+            if (frame[iD][jR].getState() == GRAIN) {
+                grainType = frame[iD][jR].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        return getIDMaxNeighbour(grainMap);
+    }
+
+    private int pentagonal(CellGrain[][] frame, int iG, int i, int iD, int jL, int j, int jR, NeighborhoodType type) {
+        Map<Integer, Integer> grainMap = new HashMap<>();
+        int grainType;
+
+        int U = 0, R = 1, D = 2, L = 3;
+        Random rand = new Random();
+        int randDirection = rand.nextInt(4);
+
+        if ((iG != -1 && jL != -1) && ((type == randomPentagonal && (randDirection != U && randDirection != L)) || (type != randomPentagonal && type != leftPentagonal && type != upPentagonal)))
+            if (frame[iG][jL].getState() == GRAIN) {
+                grainType = frame[iG][jL].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if ((iG != -1) && ((type == randomPentagonal && randDirection != U) || (type != randomPentagonal && type != upPentagonal)))
+            if (frame[iG][j].getState() == GRAIN) {
+                grainType = frame[iG][j].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if ((iG != -1 && jR != -1) && ((type == randomPentagonal && (randDirection != U && randDirection != R)) || (type != randomPentagonal && type != upPentagonal && type != rightPentagonal)))
+            if (frame[iG][jR].getState() == GRAIN) {
+                grainType = frame[iG][jR].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if ((jL != -1) && ((type == randomPentagonal && randDirection != L) || (type != randomPentagonal && type != leftPentagonal)))
+            if (frame[i][jL].getState() == GRAIN) {
+                grainType = frame[i][jL].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if ((jR != -1) && ((type == randomPentagonal && randDirection != R) || (type != randomPentagonal && type != rightPentagonal)))
+            if (frame[i][jR].getState() == GRAIN) {
+                grainType = frame[i][jR].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if ((iD != -1 && jL != -1) && ((type == randomPentagonal && (randDirection != D && randDirection != L)) || (type != randomPentagonal && type != downPentagonal && type != leftPentagonal)))
+            if (frame[iD][jL].getState() == GRAIN) {
+                grainType = frame[iD][jL].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if ((iD != -1) && ((type == randomPentagonal && randDirection != D) || (type != randomPentagonal && type != downPentagonal)))
+            if (frame[iD][j].getState() == GRAIN) {
+                grainType = frame[iD][j].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if ((iD != -1 && jR != -1) && ((type == randomPentagonal && (randDirection != D && randDirection != R)) || (type != randomPentagonal && type != downPentagonal && type != rightPentagonal)))
+            if (frame[iD][jR].getState() == GRAIN) {
+                grainType = frame[iD][jR].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        return getIDMaxNeighbour(grainMap);
+    }
+
+    private int hexagonal(CellGrain[][] frame, int iG, int i, int iD, int jL, int j, int jR, NeighborhoodType type) {
+        Map<Integer, Integer> grainMap = new HashMap<>();
+        int grainType;
+
+        if (iG != -1)
+            if (frame[iG][j].getState() == GRAIN) {
+                grainType = frame[iG][j].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if (jL != -1)
+            if (frame[i][jL].getState() == GRAIN) {
+                grainType = frame[i][jL].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if (jR != -1)
+            if (frame[i][jR].getState() == GRAIN) {
+                grainType = frame[i][jR].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        if (iD != -1)
+            if (frame[iD][j].getState() == GRAIN) {
+                grainType = frame[iD][j].getId();
+                fillMap(grainType, grainMap);
+            }
+
+        Random rand = new Random();
+        int los = rand.nextInt(2);
+        if ((type == randomHexagonal && los == 0) || (type == leftHexagonal)) {
+            if (iG != -1 && jL != -1)
+                if (frame[iG][jL].getState() == GRAIN) {
+                    grainType = frame[iG][jL].getId();
+                    fillMap(grainType, grainMap);
+                }
+
+            if (iD != -1 && jR != -1)
+                if (frame[iD][jR].getState() == GRAIN) {
+                    grainType = frame[iD][jR].getId();
+                    fillMap(grainType, grainMap);
+                }
+        } else if ((type == randomHexagonal && los == 1) || (type == rightHexagonal)) {
+            if (iG != -1 && jR != -1)
+                if (frame[iG][jR].getState() == GRAIN) {
+                    grainType = frame[iG][jR].getId();
+                    fillMap(grainType, grainMap);
+                }
+
+            if (iD != -1 && jL != -1)
+                if (frame[iD][jL].getState() == GRAIN) {
+                    grainType = frame[iD][jL].getId();
+                    fillMap(grainType, grainMap);
+                }
+        }
+
+        return getIDMaxNeighbour(grainMap);
+    }
+
     private int checkNeighbours(CellGrain[][] frame, int height, int width) {
         int result = 0;
 
@@ -178,7 +349,33 @@ public class ModelGrainGrowth {
             case vonNeuman:
                 result = vonNeuman(frame, iG, i, iD, jL, j, jR);
                 break;
-
+            case Moore:
+                result = moore(frame, iG, i, iD, jL, j, jR);
+                break;
+            case leftPentagonal:
+                result = pentagonal(frame, iG, i, iD, jL, j, jR, leftPentagonal);
+                break;
+            case rightPentagonal:
+                result = pentagonal(frame, iG, i, iD, jL, j, jR, rightPentagonal);
+                break;
+            case upPentagonal:
+                result = pentagonal(frame, iG, i, iD, jL, j, jR, upPentagonal);
+                break;
+            case downPentagonal:
+                result = pentagonal(frame, iG, i, iD, jL, j, jR, downPentagonal);
+                break;
+            case randomPentagonal:
+                result = pentagonal(frame, iG, i, iD, jL, j, jR, randomPentagonal);
+                break;
+            case leftHexagonal:
+                result = hexagonal(frame, iG, i, iD, jL, j, jR, leftHexagonal);
+                break;
+            case rightHexagonal:
+                result = hexagonal(frame, iG, i, iD, jL, j, jR, rightHexagonal);
+                break;
+            case randomHexagonal:
+                result = hexagonal(frame, iG, i, iD, jL, j, jR, randomHexagonal);
+                break;
         }
 
         return result;
@@ -426,6 +623,163 @@ public class ModelGrainGrowth {
         createGrid();
     }
 
+    //zwraca mapę ID sąsiadów w stylu moora
+    private void getGrainMap(CellGrain[][] frameGrid, Map<Integer, Integer> grainMap, int i, int j, int iG, int iD, int jL, int jR) {
+        int grainType;
+
+        if (iG != -1 && jL != -1) {
+            grainType = frameGrid[iG][jL].getId();
+            fillMap(grainType, grainMap);
+        }
+
+        if (iG != -1) {
+            grainType = frameGrid[iG][j].getId();
+            fillMap(grainType, grainMap);
+        }
+
+        if (iG != -1 && jR != -1) {
+            grainType = frameGrid[iG][jR].getId();
+            fillMap(grainType, grainMap);
+        }
+
+        if (jL != -1) {
+            grainType = frameGrid[i][jL].getId();
+            fillMap(grainType, grainMap);
+        }
+
+        if (jR != -1) {
+            grainType = frameGrid[i][jR].getId();
+            fillMap(grainType, grainMap);
+        }
+
+        if (iD != -1 && jL != -1) {
+            grainType = frameGrid[iD][jL].getId();
+            fillMap(grainType, grainMap);
+        }
+
+        if (iD != -1) {
+            grainType = frameGrid[iD][j].getId();
+            fillMap(grainType, grainMap);
+        }
+
+        if (iD != -1 && jR != -1) {
+            grainType = frameGrid[iD][jR].getId();
+            fillMap(grainType, grainMap);
+        }
+    }
+
+    //ustala energię dla wszystkich komórek w siatce
+    public void setGridEnergy(CellGrain[][] frameGrid) {
+        for (int i = 0; i < gridHeight; i++) {
+            for (int j = 0; j < gridWidth; j++) {
+                int iG, iD, jL, jR;
+
+                if (i == 0)
+                    if (edgeType == Closed) iG = -1;
+                    else iG = gridHeight - 1;
+                else iG = i - 1;
+
+                if (i == gridHeight - 1)
+                    if (edgeType == Closed) iD = -1;
+                    else iD = 0;
+                else iD = i + 1;
+
+                if (j == 0)
+                    if (edgeType == Closed) jL = -1;
+                    else jL = gridWidth - 1;
+                else jL = j - 1;
+
+                if (j == gridWidth - 1)
+                    if (edgeType == Closed) jR = -1;
+                    else jR = 0;
+                else jR = j + 1;
+
+                Map<Integer, Integer> grainMap = new HashMap<>();
+                getGrainMap(frameGrid, grainMap, i, j, iG, iD, jL, jR);
+
+                frameGrid[i][j].setEnergy(calculateEnergy(grainMap, grid[i][j].getId()));
+            }
+        }
+    }
+
+    //wypełnia siatkę w stylu Monte Carlo
+    public void fillMonteCarlo(int numberOfGrains) {
+        reset();
+        Random rand = new Random();
+        for (int i = 0; i < numberOfGrains; i++)
+            listOfGrains.add(new GrainType(rand.nextDouble(), rand.nextDouble(), rand.nextDouble()));
+
+        for (int i = 0; i < gridHeight; i++)
+            for (int j = 0; j < gridWidth; j++) {
+                grid[i][j].setState(GRAIN);
+                grid[i][j].setId(rand.nextInt(numberOfGrains) + 1);
+                numberOfEmptyGrains--;
+            }
+
+        setGridEnergy(grid);
+    }
+
+    //oblicza energię układu dla pojedynczego ziarna
+    private int calculateEnergy(Map<Integer, Integer> grainMap, int grainID) {
+        int energy = 0;
+
+        for (Map.Entry<Integer, Integer> entry : grainMap.entrySet())
+            if (entry.getKey() != grainID)
+                energy += entry.getValue();
+
+        return energy;
+    }
+
+    //zwraca nowe ID ziarna w taki sposób aby zmniejszyć energię układu
+    private int checkEnergy(CellGrain[][] frame, int height, int width) {
+        int iG, i, iD, jL, j, jR;
+        i = height;
+        j = width;
+
+        if (height == 0)
+            if (edgeType == Closed) iG = -1;
+            else iG = gridHeight - 1;
+        else iG = height - 1;
+
+        if (height == gridHeight - 1)
+            if (edgeType == Closed) iD = -1;
+            else iD = 0;
+        else iD = height + 1;
+
+        if (width == 0)
+            if (edgeType == Closed) jL = -1;
+            else jL = gridWidth - 1;
+        else jL = width - 1;
+
+        if (width == gridWidth - 1)
+            if (edgeType == Closed) jR = -1;
+            else jR = 0;
+        else jR = width + 1;
+
+
+        Map<Integer, Integer> grainMap = new HashMap<>();
+        getGrainMap(frame, grainMap, i, j, iG, iD, jL, jR);
+
+        int energyBefore = calculateEnergy(grainMap, frame[i][j].getId());
+        Random rand = new Random();
+        int newID = rand.nextInt(listOfGrains.size()) + 1;
+
+        int newEnergy = calculateEnergy(grainMap, newID);
+        while (newEnergy > energyBefore) {
+            newID = rand.nextInt(listOfGrains.size()) + 1;
+            newEnergy = calculateEnergy(grainMap, newID);
+        }
+        frame[i][j].setEnergy(newEnergy);
+
+//        if (newEnergy <= energyBefore) {
+//            frame[i][j].setEnergy(newEnergy);
+//        }
+//        else newID = frame[i][j].getId();
+
+
+        return newID;
+    }
+
     public CellGrain[][] getGrid() {
         return grid;
     }
@@ -442,17 +796,34 @@ public class ModelGrainGrowth {
     public CellGrain[][] getResult(CellGrain[][] frame) {
         CellGrain[][] tmp = getTmp();
 
-        for (int i = 0; i < gridHeight; i++) {
-            for (int j = 0; j < gridWidth; j++) {
-                if (frame[i][j].getState() == EMPTY) {
-                    tmp[i][j].setId(checkNeighbours(frame, i, j));
-                    if (tmp[i][j].getId() != 0) {
+        if (placementType != MonteCarlo) {
+            for (int i = 0; i < gridHeight; i++) {
+                for (int j = 0; j < gridWidth; j++) {
+                    if (frame[i][j].getState() == EMPTY) {
+                        tmp[i][j].setId(checkNeighbours(frame, i, j));
+                        if (tmp[i][j].getId() != 0) {
+                            tmp[i][j].setState(GRAIN);
+                            numberOfEmptyGrains--;
+                        }
+                    } else if (frame[i][j].getState() == GRAIN) {
                         tmp[i][j].setState(GRAIN);
-                        numberOfEmptyGrains--;
+                        tmp[i][j].setId(frame[i][j].getId());
                     }
-                } else if (frame[i][j].getState() == GRAIN) {
-                    tmp[i][j].setState(GRAIN);
-                    tmp[i][j].setId(frame[i][j].getId());
+                }
+            }
+        } else if (placementType == MonteCarlo) {
+            setGridEnergy(frame);
+            for (int i = 0; i < gridHeight; i++) {
+                for (int j = 0; j < gridWidth; j++) {
+                    if (frame[i][j].getEnergy() != 0) {
+                        tmp[i][j].setId(checkEnergy(frame, i, j));
+                        //tmp[i][j].setEnergy(frame[i][j].getEnergy());
+                        tmp[i][j].setState(GRAIN);
+                    } else {
+                        tmp[i][j].setState(GRAIN);
+                        tmp[i][j].setId(frame[i][j].getId());
+                        tmp[i][j].setEnergy(tmp[i][j].getEnergy());
+                    }
                 }
             }
         }
@@ -462,5 +833,4 @@ public class ModelGrainGrowth {
 
         return getGrid();
     }
-
 }

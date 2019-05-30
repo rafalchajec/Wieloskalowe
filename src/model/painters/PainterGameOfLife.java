@@ -26,7 +26,7 @@ public class PainterGameOfLife implements Runnable {
         this.gc = gc;
         running = true;
         paused = false;
-}
+    }
 
     private void cleanCanvas() {
         gc.setFill(Color.WHITE);

@@ -16,6 +16,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import model.Global;
+
+import static model.ModelGrainGrowth.*;
+
 import model.ModelGrainGrowth;
 import model.cells.CellGrain;
 import model.painters.PainterGrainGrowth;
@@ -27,17 +30,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static model.ModelGrainGrowth.*;
 import static model.ModelGrainGrowth.EdgeType.*;
-import static model.ModelGrainGrowth.EdgeType.Closed;
-import static model.ModelGrainGrowth.EdgeType.Periodic;
 import static model.ModelGrainGrowth.NeighborhoodType.*;
-
-import static model.ModelGrainGrowth.NeighborhoodType.vonNeuman;
+import static model.ModelGrainGrowth.NeighborhoodType.randomHexagonal;
 import static model.ModelGrainGrowth.TypeOfPlacement.*;
-import static model.ModelGrainGrowth.TypeOfPlacement.EvenlyPlacement;
-import static model.ModelGrainGrowth.TypeOfPlacement.Random;
-import static model.ModelGrainGrowth.TypeOfPlacement.RandomWithRadius;
+import static model.ModelGrainGrowth.TypeOfPlacement.MonteCarlo;
 
 public class ControllerGrainGrowth implements Initializable {
     @FXML
@@ -57,7 +54,7 @@ public class ControllerGrainGrowth implements Initializable {
     @FXML
     ChoiceBox<String> choiceTypeOfPlacement;
     @FXML
-    Button startButton, pauseButton, stopButton, fillButton, resetButton;
+    Button startButton, pauseButton, stopButton, fillButton, resetButton, smoothingMonteCarloButtonStart;
     @FXML
     Canvas canvas2D;
 
@@ -89,7 +86,7 @@ public class ControllerGrainGrowth implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         gc = canvas2D.getGraphicsContext2D();
 
-        String[] neighboursOptions = new String[]{"von Neuman"};
+        String[] neighboursOptions = new String[]{"von Neuman", "Moore", "Pentagonal left", "Pentagonal right", "Pentagonal up", "Pentagonal down", "Pentagonal random", "Hexagonal left", "Hexagonal right", "Hexagonal random"};
         choiceBoxNeighborhoodType.setItems(FXCollections.observableArrayList(neighboursOptions));
         choiceBoxNeighborhoodType.setValue("von Neuman");
         nType = NeighborhoodType.vonNeuman;
@@ -97,6 +94,33 @@ public class ControllerGrainGrowth implements Initializable {
             switch (newValue.intValue()) {
                 case 0:
                     nType = vonNeuman;
+                    break;
+                case 1:
+                    nType = Moore;
+                    break;
+                case 2:
+                    nType = leftPentagonal;
+                    break;
+                case 3:
+                    nType = rightPentagonal;
+                    break;
+                case 4:
+                    nType = upPentagonal;
+                    break;
+                case 5:
+                    nType = downPentagonal;
+                    break;
+                case 6:
+                    nType = randomPentagonal;
+                    break;
+                case 7:
+                    nType = leftHexagonal;
+                    break;
+                case 8:
+                    nType = rightHexagonal;
+                    break;
+                case 9:
+                    nType = randomHexagonal;
                     break;
             }
 
@@ -121,7 +145,7 @@ public class ControllerGrainGrowth implements Initializable {
             cleanCanvas();
         });
 
-        String[] placementOptions = new String[]{"Random", "Evenly placement", "Placement with radius"};
+        String[] placementOptions = new String[]{"Random", "Evenly placement", "Placement with radius", "Monte Carlo"};
         choiceTypeOfPlacement.setItems(FXCollections.observableArrayList(placementOptions));
         choiceTypeOfPlacement.setValue("Random");
         pType = Random;
@@ -138,6 +162,10 @@ public class ControllerGrainGrowth implements Initializable {
                 case 2:
                     pType = RandomWithRadius;
                     radiusField.setDisable(false);
+                    break;
+                case 3:
+                    pType = MonteCarlo;
+                    radiusField.setDisable(true);
                     break;
             }
             if (model != null) {
@@ -184,6 +212,7 @@ public class ControllerGrainGrowth implements Initializable {
         pauseButton.setDisable(true);
         stopButton.setDisable(true);
         radiusField.setDisable(true);
+        smoothingMonteCarloButtonStart.setDisable(true);
     }
 
     private void setLabelGridSize() {
@@ -311,6 +340,9 @@ public class ControllerGrainGrowth implements Initializable {
                 if (numberOfAddedGrains < grainAmount)
                     displayAlert("Nie udało dodać się " + grainAmount + " ziaren." +
                             "\nDodano " + numberOfAddedGrains + " ziaren.");
+            } else if (pType == MonteCarlo) {
+                model.fillMonteCarlo(grainAmount);
+                refreshCanvas();
             }
         }
     }
@@ -343,7 +375,7 @@ public class ControllerGrainGrowth implements Initializable {
     public void reset(ActionEvent actionEvent) {
         model.reset();
         cleanCanvas();
-
+        smoothingMonteCarloButtonStart.setDisable(true);
     }
 
     public void start(ActionEvent actionEvent) {
@@ -353,7 +385,7 @@ public class ControllerGrainGrowth implements Initializable {
         choiceBoxEdgeType.setDisable(true);
         sliderGridHeight.setDisable(true);
         sliderGridWidth.setDisable(true);
-
+        smoothingMonteCarloButtonStart.setDisable(true);
 
         //uruchomienie Garbage Collectora
         System.gc();
@@ -380,7 +412,7 @@ public class ControllerGrainGrowth implements Initializable {
         choiceBoxEdgeType.setDisable(false);
         sliderGridHeight.setDisable(false);
         sliderGridWidth.setDisable(false);
-
+        smoothingMonteCarloButtonStart.setDisable(false);
 
         model.setPlacementType(pType);
         Global.placementType = pType;
@@ -390,7 +422,31 @@ public class ControllerGrainGrowth implements Initializable {
 
     public void resetButtons() {
         stop(new ActionEvent());
-
+        smoothingMonteCarloButtonStart.setDisable(false);
     }
 
+    public void saveToFile(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("png files (*.png)", "*.png");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        File file = fileChooser.showSaveDialog(Global.primaryStage);
+
+        if (file != null) {
+            try {
+                WritableImage writableImage = new WritableImage((int) canvas2D.getWidth(), (int) canvas2D.getHeight());
+                canvas2D.snapshot(null, writableImage);
+                RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+                ImageIO.write(renderedImage, "png", file);
+            } catch (IOException ex) {
+            }
+        }
+    }
+
+    public void smoothingMonteCarloButtonStart(ActionEvent actionEvent) {
+        model.setPlacementType(MonteCarlo);
+        Global.placementType = MonteCarlo;
+        start(new ActionEvent());
+    }
 }
